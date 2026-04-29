@@ -1,0 +1,200 @@
+{
+  "collections": [
+    {
+      "slug": "comment_classifications",
+      "label": "Comment Classifications",
+      "labelSingular": "Comment Classification",
+      "supports": [
+        "drafts",
+        "revisions"
+      ],
+      "fields": [
+        {
+          "slug": "comment_id",
+          "label": "Comment",
+          "type": "reference",
+          "required": true,
+          "unique": false
+        },
+        {
+          "slug": "classified_by_id",
+          "label": "Classified By",
+          "type": "reference",
+          "required": true,
+          "unique": false
+        },
+        {
+          "slug": "classification",
+          "label": "Classification",
+          "type": "select",
+          "required": true,
+          "unique": false,
+          "validation": {
+            "options": [
+              "best",
+              "good",
+              "average",
+              "hate_speech",
+              "bullying",
+              "vulgar",
+              "spamming",
+              "expedient",
+              "peoples_choice"
+            ]
+          }
+        },
+        {
+          "slug": "sentiment",
+          "label": "Sentiment",
+          "type": "select",
+          "required": true,
+          "unique": false,
+          "validation": {
+            "options": [
+              "positive",
+              "negative",
+              "neutral",
+              "expedient",
+              "peoples_choice"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "slug": "comments",
+      "label": "Comments",
+      "labelSingular": "Comment",
+      "supports": [
+        "drafts",
+        "revisions"
+      ],
+      "fields": [
+        {
+          "slug": "post_id",
+          "label": "Post",
+          "type": "reference",
+          "required": false,
+          "unique": false
+        },
+        {
+          "slug": "author",
+          "label": "Author",
+          "type": "reference",
+          "required": false,
+          "unique": false
+        },
+        {
+          "slug": "parent_id",
+          "label": "Parent Comment",
+          "type": "reference",
+          "required": false,
+          "unique": false
+        },
+        {
+          "slug": "content",
+          "label": "Content",
+          "type": "text",
+          "required": true,
+          "unique": false
+        },
+        {
+          "slug": "guest_name_name",
+          "label": "Guest Name",
+          "type": "string",
+          "required": false,
+          "unique": false
+        },
+        {
+          "slug": "guest_author_email",
+          "label": "Guest Email",
+          "type": "string",
+          "required": false,
+          "unique": true
+        }
+      ]
+    },
+    {
+      "slug": "posts",
+      "label": "Posts",
+      "labelSingular": "Post",
+      "supports": [
+        "drafts",
+        "revisions"
+      ],
+      "fields": [
+        {
+          "slug": "title",
+          "label": "title",
+          "type": "string",
+          "required": true,
+          "unique": false
+        },
+        {
+          "slug": "content",
+          "label": "Content",
+          "type": "portableText",
+          "required": true,
+          "unique": false
+        },
+        {
+          "slug": "type",
+          "label": "Type",
+          "type": "select",
+          "required": true,
+          "unique": false,
+          "validation": {
+            "options": [
+              "article",
+              "podcast",
+              "news",
+              "video",
+              "community",
+              "topics",
+              "mindbytes"
+            ]
+          }
+        },
+        {
+          "slug": "comment_enabled",
+          "label": "CommentEnabled",
+          "type": "boolean",
+          "required": false,
+          "unique": false
+        },
+        {
+          "slug": "is_editors_pick",
+          "label": "Editors Pick",
+          "type": "boolean",
+          "required": false,
+          "unique": false
+        },
+        {
+          "slug": "estimated_reading_minutes",
+          "label": "Estimated Reading Time",
+          "type": "integer",
+          "required": false,
+          "unique": false
+        },
+        {
+          "slug": "view_count",
+          "label": "View Count",
+          "type": "integer",
+          "required": false,
+          "unique": false
+        },
+        {
+          "slug": "origin_resource",
+          "label": "Origin Resource",
+          "type": "string",
+          "required": false,
+          "unique": false,
+          "validation": {
+            "maxLength": 50
+          }
+        }
+      ]
+    }
+  ],
+  "version": "53345fdbfbc124cb"
+}
