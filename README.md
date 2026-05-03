@@ -1,6 +1,5 @@
-# EmDash Blank Template
+# Mindplex Emdash Migration
 
-The most minimal EmDash template. A single index page with [EmDash](https://github.com/emdash-cms/emdash) wired up and nothing else. No seed data, no layouts, no components -- start from scratch with full control.
 
 ## What's Included
 
@@ -11,7 +10,7 @@ The most minimal EmDash template. A single index page with [EmDash](https://gith
 ## Infrastructure
 
 - **Runtime:** Node.js
-- **Database:** SQLite (local file)
+- **Database:** SQLite -> to be changed to postgres
 - **Storage:** Local filesystem
 - **Framework:** Astro with `@astrojs/node`
 
@@ -24,8 +23,3 @@ pnpm dev
 ```
 
 Open http://localhost:4321 for the site and http://localhost:4321/_emdash/admin for the CMS.
-
-## See Also
-
-- [All templates](../)
-- [EmDash documentation](https://github.com/emdash-cms/emdash/tree/main/docs)
