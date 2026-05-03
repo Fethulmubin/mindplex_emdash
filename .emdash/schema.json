@@ -131,6 +131,13 @@
           "unique": false
         },
         {
+          "slug": "author",
+          "label": "Author",
+          "type": "string",
+          "required": false,
+          "unique": false
+        },
+        {
           "slug": "content",
           "label": "Content",
           "type": "portableText",
@@ -192,9 +199,16 @@
           "validation": {
             "maxLength": 50
           }
+        },
+        {
+          "slug": "excerpt",
+          "label": "Excerpt",
+          "type": "string",
+          "required": false,
+          "unique": false
         }
       ]
     }
   ],
-  "version": "53345fdbfbc124cb"
+  "version": "e10cc8bafc05f83f"
 }

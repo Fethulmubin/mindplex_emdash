@@ -11,6 +11,7 @@ EmDash plugins extend the CMS with hooks, storage, settings, admin UI, API route
 
 EmDash has two plugin formats:
 
+
 | Type         | Format                                                  | Admin UI           | Where it runs                               |
 | ------------ | ------------------------------------------------------- | ------------------ | ------------------------------------------- |
 | **Standard** | `definePlugin({ hooks, routes })`                       | Block Kit          | Isolate on Cloudflare, in-process elsewhere |

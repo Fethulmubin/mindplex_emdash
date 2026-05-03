@@ -40,6 +40,7 @@ export interface Post {
   slug: string | null;
   status: string;
   title: string;
+  author?: string;
   content: PortableTextBlock[];
   type: "article" | "podcast" | "news" | "video" | "community" | "topics" | "mindbytes";
   comment_enabled?: boolean;
@@ -47,6 +48,7 @@ export interface Post {
   estimated_reading_minutes?: number;
   view_count?: number;
   origin_resource?: string;
+  excerpt?: string;
   createdAt: Date;
   updatedAt: Date;
   publishedAt: Date | null;
