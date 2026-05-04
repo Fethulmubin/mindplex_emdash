@@ -8,11 +8,15 @@ export type ListPostsParams = {
 
 export type CreatePostInput = {
 	title: string;
-	content?: string;
+	content: unknown;
 	slug?: string;
 	status?: string;
-	type?: string;
-	author_id?: string;
+	type: string;
+	author?: string;
 	excerpt?: string;
+	comment_enabled?: boolean;
+	is_editors_pick?: boolean;
 	estimated_reading_minutes?: number;
+	origin_resource?: string;
+	published_at?: string;
 };

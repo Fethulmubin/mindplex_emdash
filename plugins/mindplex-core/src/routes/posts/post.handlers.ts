@@ -1,6 +1,7 @@
 import type { PluginContext } from "emdash";
 import { createPost, getPostByIdentifier, getPosts } from "../../services/posts";
 import type { CreatePostInput } from "../../types/posts";
+import { CreatePostSchema } from "./post.schemas";
 
 export function getIdentifierFromRoute(routeCtx: any): string | null {
 	if (routeCtx?.params?.identifier) return routeCtx.params.identifier;
@@ -54,16 +55,33 @@ export async function getPostHandler(routeCtx: any, ctx: PluginContext) {
 }
 
 export async function createPostHandler(routeCtx: any, ctx: PluginContext) {
-	const input = routeCtx.input as CreatePostInput;
-	if (!input?.title) return { success: false, error: "Title is required." };
+	const rawInput = routeCtx.input ?? (await routeCtx.request.json().catch(() => ({})));
+
+	const parsed = CreatePostSchema.safeParse(rawInput);
+	if (!parsed.success) {
+		throw new Response(JSON.stringify({ error: "Invalid input", details: parsed.error.flatten() }), {
+			status: 400,
+			headers: { "Content-Type": "application/json" },
+		});
+	}
+
+	const input = parsed.data as CreatePostInput;
 
 	try {
+		ctx.log.info(`[createPostHandler] Validated payload: ${JSON.stringify(input)}`);
 		const post = await createPost(ctx, input);
-		ctx.log.info(`Post created via plugin: ${post.id}`);
-		return { success: true, data: post };
+		ctx.log.info(`[createPostHandler] Post created successfully. Returning data.`);
+		return { data: post };
 	} catch (error: any) {
-		ctx.log.error("Plugin Error: Failed to create post", { error: error.message });
-		return { success: false, error: error.message || "Failed to create post." };
+		ctx.log.error(`[createPostHandler] Caught error: ${error?.message || error}`, { error });
+		if (error instanceof Response) {
+			throw error;
+		}
+		
+		throw new Response(JSON.stringify({ error: error.message || "Failed to create post." }), {
+			status: 500,
+			headers: { "Content-Type": "application/json" },
+		});
 	}
 }
 
