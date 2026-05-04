@@ -1,5 +1,5 @@
-import { postRoutes } from "./posts.routes";
+import { postFeatureRoutes } from "./posts";
 
 export const routes = {
-	...postRoutes,
+	...postFeatureRoutes,
 };
