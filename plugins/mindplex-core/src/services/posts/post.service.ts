@@ -1,7 +1,7 @@
 import type { PluginContext } from "emdash";
 import type { CreatePostInput, ListPostsParams } from "../../types/posts";
 
-export async function listPosts(ctx: PluginContext, params: ListPostsParams) {
+export async function getPosts(ctx: PluginContext, params: ListPostsParams) {
 	const options: any = {
 		limit: Math.min(params.limit ?? 10, 100),
 		cursor: params.cursor,

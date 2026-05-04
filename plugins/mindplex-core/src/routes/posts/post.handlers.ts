@@ -1,5 +1,6 @@
 import type { PluginContext } from "emdash";
-import { getPostByIdentifier, listPosts } from "../../services/posts";
+import { createPost, getPostByIdentifier, getPosts } from "../../services/posts";
+import type { CreatePostInput } from "../../types/posts";
 
 export function getIdentifierFromRoute(routeCtx: any): string | null {
 	if (routeCtx?.params?.identifier) return routeCtx.params.identifier;
@@ -15,7 +16,7 @@ export function getIdentifierFromRoute(routeCtx: any): string | null {
 	return null;
 }
 
-export async function listPostsHandler(routeCtx: any, ctx: PluginContext) {
+export async function getPostsHandler(routeCtx: any, ctx: PluginContext) {
 	const url = new URL(routeCtx.request.url);
 	const type = url.searchParams.get("type");
 	const feed = url.searchParams.get("feed");
@@ -24,7 +25,7 @@ export async function listPostsHandler(routeCtx: any, ctx: PluginContext) {
 	const cursor = url.searchParams.get("cursor") || undefined;
 
 	try {
-		const result = await listPosts(ctx, {
+		const result = await getPosts(ctx, {
 			type: type || undefined,
 			feed: feed || undefined,
 			sort: sort || undefined,
@@ -49,6 +50,20 @@ export async function getPostHandler(routeCtx: any, ctx: PluginContext) {
 	} catch (error: any) {
 		ctx.log.error("Plugin Error: Failed to get post", { error: error.message });
 		return { success: false, error: "Failed to fetch post." };
+	}
+}
+
+export async function createPostHandler(routeCtx: any, ctx: PluginContext) {
+	const input = routeCtx.input as CreatePostInput;
+	if (!input?.title) return { success: false, error: "Title is required." };
+
+	try {
+		const post = await createPost(ctx, input);
+		ctx.log.info(`Post created via plugin: ${post.id}`);
+		return { success: true, data: post };
+	} catch (error: any) {
+		ctx.log.error("Plugin Error: Failed to create post", { error: error.message });
+		return { success: false, error: error.message || "Failed to create post." };
 	}
 }
 
