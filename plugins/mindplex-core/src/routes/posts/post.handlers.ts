@@ -55,33 +55,30 @@ export async function getPostHandler(routeCtx: any, ctx: PluginContext) {
 }
 
 export async function createPostHandler(routeCtx: any, ctx: PluginContext) {
-	const rawInput = routeCtx.input ?? (await routeCtx.request.json().catch(() => ({})));
+    try {
+        const rawInput = routeCtx.input ?? (await routeCtx.request.json().catch(() => ({})));
+        const parsed = CreatePostSchema.safeParse(rawInput);
+        
+        if (!parsed.success) {
+            return new Response(JSON.stringify({ 
+                error: "Validation failed", 
+                details: parsed.error.flatten() 
+            }), { status: 400 });
+        }
 
-	const parsed = CreatePostSchema.safeParse(rawInput);
-	if (!parsed.success) {
-		throw new Response(JSON.stringify({ error: "Invalid input", details: parsed.error.flatten() }), {
-			status: 400,
-			headers: { "Content-Type": "application/json" },
-		});
-	}
+        const post = await createPost(ctx, parsed.data);
+        return {status: true, post} ;
 
-	const input = parsed.data as CreatePostInput;
+    } catch (error: any) {
+        
+        if (error instanceof Response) throw error;
 
-	try {
-		ctx.log.info(`[createPostHandler] Validated payload: ${JSON.stringify(input)}`);
-		const post = await createPost(ctx, input);
-		ctx.log.info(`[createPostHandler] Post created successfully. Returning data.`);
-		return { data: post };
-	} catch (error: any) {
-		ctx.log.error(`[createPostHandler] Caught error: ${error?.message || error}`, { error });
-		if (error instanceof Response) {
-			throw error;
-		}
-		
-		throw new Response(JSON.stringify({ error: error.message || "Failed to create post." }), {
-			status: 500,
-			headers: { "Content-Type": "application/json" },
-		});
-	}
+        return new Response(JSON.stringify({ 
+            error: error.message || "Internal Server Error",
+            debug_info: error.stack?.split('\n')[0] 
+        }), {
+            status: 500,
+            headers: { "Content-Type": "application/json" },
+        });
+    }
 }
-

@@ -33,65 +33,44 @@ function generateSlug(value: string) {
 }
 
 export async function createPost(ctx: PluginContext, input: CreatePostInput) {
-	ctx.log.info(`[createPost] Starting creation for title: ${input.title}`);
-	/*
-	const slug = input.slug?.trim() || generateSlug(input.title);
-	ctx.log.info(`[createPost] Generated slug: ${slug}`);
+    ctx.log.info(`[createPost] Starting creation for title: ${input.title}`);
 
-	const existing = await ctx.content!.list("posts", { limit: 1, where: { slug } });
-	const existingItems = extractListItems(existing);
-	ctx.log.info(`[createPost] Checked existing items for slug ${slug}. Found ${existingItems.length} items`);
-	if (existingItems.length > 0) {
-		ctx.log.info(`[createPost] The matched item is: ${JSON.stringify(existingItems[0])}`);
-	}
-	
-	if (existingItems.length > 0) {
-		ctx.log.info(`[createPost] Conflicting slug found. Aborting.`);
-		const r = new Response(JSON.stringify({ error: "A post with this slug already exists" }), {
-			status: 409,
-			headers: { "Content-Type": "application/json" },
-		});
-		throw r;
-	}
-	*/
+    const slug = input.slug?.trim() || generateSlug(input.title);
 
-	let publishedAt: string | undefined;
-	if (input.published_at) {
-		publishedAt = new Date(input.published_at).toISOString();
-	} else if (input.status === "published") {
-		publishedAt = new Date().toISOString();
-	}
+    let publishedAt: string | undefined;
+    if (input.published_at) {
+        publishedAt = new Date(input.published_at).toISOString();
+    } else if (input.status === "published") {
+        publishedAt = new Date().toISOString();
+    }
 
-	const payload: any = {
-		title: input.title,
-		content: input.content,
-		type: input.type,
-		// slug,
-		status: input.status || "draft",
-		published_at: publishedAt,
-		excerpt: input.excerpt,
-		author: input.author,
-		comment_enabled: input.comment_enabled,
-		is_editors_pick: input.is_editors_pick,
-		estimated_reading_minutes: input.estimated_reading_minutes,
-		origin_resource: input.origin_resource,
-	};
-	if (input.slug?.trim()) {
-		payload.slug = input.slug.trim();
-	}
-	
-	ctx.log.info(`[createPost] Sending payload to ctx.content.create: ${JSON.stringify(payload)}`);
-	
-	try {
-		const result = await ctx.content!.create!("posts", payload);
-		ctx.log.info(`[createPost] Result from create!: ${JSON.stringify(result)}`);
-		return result;
-	} catch (e: any) {
-		ctx.log.error(`[createPost] Error calling create!: ${e.message}`, { error: e });
-		throw e;
-	}
+    const payload: any = {
+        title: input.title,
+		content: typeof input.content === 'string' 
+            ? [{ _type: 'block', children: [{ _type: 'span', text: input.content }] }] 
+            : input.content,
+        // content: input.content,
+        type: input.type,
+        slug: slug, 
+        status: input.status || "draft",
+        published_at: publishedAt,
+        excerpt: input.excerpt,
+        author: input.author,
+        comment_enabled: input.comment_enabled ?? true,
+        is_editors_pick: input.is_editors_pick ?? false,
+        estimated_reading_minutes: input.estimated_reading_minutes || 0,
+        origin_resource: input.origin_resource,
+    };
+    
+    try {
+        if (!ctx.content) throw new Error("Content service is not initialized in PluginContext");
+        const result = await ctx.content.create!("posts", payload);
+        return result;
+    } catch (e: any) {
+        ctx.log.error(`[createPost] Error: ${e.message}`);
+        throw e;
+    }
 }
-
 
 function extractListItems(result: any) {
 	if (Array.isArray(result)) return result;
