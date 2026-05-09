@@ -5,30 +5,12 @@
 
 import type { ContentBylineCredit, PortableTextBlock } from "emdash";
 
-export interface CommentClassification {
+export interface Page {
   id: string;
   slug: string | null;
   status: string;
-  comment_id: string;
-  classified_by_id: string;
-  classification: "best" | "good" | "average" | "hate_speech" | "bullying" | "vulgar" | "spamming" | "expedient" | "peoples_choice";
-  sentiment: "positive" | "negative" | "neutral" | "expedient" | "peoples_choice";
-  createdAt: Date;
-  updatedAt: Date;
-  publishedAt: Date | null;
-  bylines?: ContentBylineCredit[];
-}
-
-export interface Comment {
-  id: string;
-  slug: string | null;
-  status: string;
-  post_id?: string;
-  author?: string;
-  parent_id?: string;
-  content: string;
-  guest_name_name?: string;
-  guest_author_email?: string;
+  title: string;
+  content?: PortableTextBlock[];
   createdAt: Date;
   updatedAt: Date;
   publishedAt: Date | null;
@@ -40,14 +22,8 @@ export interface Post {
   slug: string | null;
   status: string;
   title: string;
-  author?: string;
-  content: PortableTextBlock[];
-  type: "article" | "podcast" | "news" | "video" | "community" | "topics" | "mindbytes";
-  comment_enabled?: boolean;
-  is_editors_pick?: boolean;
-  estimated_reading_minutes?: number;
-  view_count?: number;
-  origin_resource?: string;
+  featured_image?: { id: string; src?: string; alt?: string; width?: number; height?: number };
+  content?: PortableTextBlock[];
   excerpt?: string;
   createdAt: Date;
   updatedAt: Date;
@@ -57,8 +33,7 @@ export interface Post {
 
 declare module "emdash" {
   interface EmDashCollections {
-    comment_classifications: CommentClassification;
-    comments: Comment;
+    pages: Page;
     posts: Post;
   }
 }

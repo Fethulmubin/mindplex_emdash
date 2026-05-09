@@ -14,18 +14,21 @@
   "dependencies": {
     "@astrojs/node": "^10.0.0",
     "@astrojs/react": "^5.0.0",
+    "@mindplex/plugin-core": "link:./plugins/mindplex-core",
+    "argon2": "^0.31.2",
     "astro": "^6.0.1",
+    "bcryptjs": "^2.4.3",
     "better-sqlite3": "^12.8.0",
     "emdash": "^0.8.0",
     "react": "19.2.4",
-    "react-dom": "19.2.4",
-    "@mindplex/plugin-core": "link:./plugins/mindplex-core"
+    "react-dom": "19.2.4"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.7"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
+      "argon2",
       "better-sqlite3",
       "esbuild"
     ]
